@@ -250,10 +250,40 @@ local CIRCLED_NUMBERS = {
 	"⑪", "⑫", "⑬", "⑭", "⑮", "⑯", "⑰", "⑱", "⑲", "⑳",
 }
 
--- 跟踪 tab 创建顺序: tab_id -> 创建序号
--- 使用懒加载方式：第一次渲染时分配序号，避免 spawn-tab 事件不可靠问题
-local tab_creation_order = {}
-local next_tab_number = 1
+-- Tab 序号持久化存储路径
+local TAB_ORDER_FILE = os.getenv("HOME") .. "/.cache/wezterm/tab_order.json"
+
+-- 从文件加载 tab 序号数据
+local function load_tab_order()
+	local f = io.open(TAB_ORDER_FILE, "r")
+	if f then
+		local content = f:read("*all")
+		f:close()
+		local ok, data = pcall(wezterm.json_parse, content)
+		if ok and data then
+			return data.tab_creation_order or {}, data.next_tab_number or 1
+		end
+	end
+	return {}, 1
+end
+
+-- 保存 tab 序号数据到文件
+local function save_tab_order(tab_order, next_num)
+	-- 确保目录存在
+	os.execute("mkdir -p " .. os.getenv("HOME") .. "/.cache/wezterm")
+	local f = io.open(TAB_ORDER_FILE, "w")
+	if f then
+		local data = {
+			tab_creation_order = tab_order,
+			next_tab_number = next_num,
+		}
+		f:write(wezterm.json_encode(data))
+		f:close()
+	end
+end
+
+-- 加载持久化的 tab 序号数据
+local tab_creation_order, next_tab_number = load_tab_order()
 
 -- 跟踪当前活动的 tab 索引
 local last_active_tab_index = nil
@@ -268,11 +298,13 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
 	end
 
 	-- 懒分配序号：第一次遇到此 tab 时分配固定序号
-	if tab.tab_id and not tab_creation_order[tab.tab_id] then
-		tab_creation_order[tab.tab_id] = next_tab_number
+	if tab.tab_id and not tab_creation_order[tostring(tab.tab_id)] then
+		tab_creation_order[tostring(tab.tab_id)] = next_tab_number
 		next_tab_number = next_tab_number + 1
+		-- 持久化保存
+		save_tab_order(tab_creation_order, next_tab_number)
 	end
-	local tab_number = tab_creation_order[tab.tab_id] or 1
+	local tab_number = tab_creation_order[tostring(tab.tab_id)] or 1
 	local symbol = CIRCLED_NUMBERS[tab_number] or ("" .. tab_number .. "")
 	-- 优先使用自定义 tab 标题, 否则使用 pane 标题 (通常是当前运行的命令/程序名)
 	local title = tab.tab_title ~= "" and tab.tab_title or tab.active_pane.title
