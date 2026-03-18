@@ -76,48 +76,6 @@ wezterm.on("update-status", function(window, pane)
 end)
 
 -- ============================================================
--- 新建 tab 紧挨当前 tab (而非追加到末尾)
--- ============================================================
-wezterm.on("spawn-tab-next-to-current", function(window, pane)
-	log_debug("spawn-tab-next-to-current triggered")
-
-	-- 获取 mux window 对象
-	local mux_window = window:mux_window()
-	log_debug("got mux_window")
-
-	-- 使用 tabs_with_info 获取带索引信息的 tab 列表
-	local tabs_with_info = mux_window:tabs_with_info()
-	log_debug("tabs count: " .. #tabs_with_info)
-
-	local current_idx = 0
-	-- 找到当前活动 tab 的索引
-	for i, t in ipairs(tabs_with_info) do
-		if t.is_active then
-			current_idx = i - 1 -- 转为 0-based
-			log_debug("found active tab at index: " .. current_idx)
-			break
-		end
-	end
-
-	-- 新建 tab (默认追加到末尾)
-	mux_window:spawn_tab({})
-	log_debug("spawned new tab")
-
-	-- 计算新 tab 当前在末尾的索引
-	local new_tab_idx = #tabs_with_info -- 0-based (因为刚新建了一个)
-
-	-- 计算需要移动的距离: 移动到当前 tab 的右边
-	local offset = current_idx + 1 - new_tab_idx
-	log_debug("offset: " .. offset)
-
-	-- 执行移动
-	if offset ~= 0 then
-		window:perform_action(wezterm.action.MoveTabRelative(offset), pane)
-		log_debug("moved tab")
-	end
-end)
-
--- ============================================================
 -- Claude Code 兼容性
 -- ============================================================
 -- 启用 Kitty 键盘协议，支持复杂的键盘组合键（Claude Code 必需）
@@ -194,11 +152,8 @@ config.keys = {
 	{ key = "UpArrow", mods = "CMD", action = wezterm.action.ScrollToTop },
 	{ key = "DownArrow", mods = "CMD", action = wezterm.action.ScrollToBottom },
 	-- Tab 管理
-	{ key = "t", mods = "CMD", action = wezterm.action.EmitEvent("spawn-tab-next-to-current") },
+	{ key = "t", mods = "CMD", action = wezterm.action.SpawnTab("DefaultDomain") },
 	{ key = "w", mods = "CMD", action = wezterm.action.CloseCurrentTab({ confirm = false }) },
-	-- Tab 相对位置切换 (覆盖默认的 Cmd+1/2)
-	{ key = "1", mods = "CMD", action = wezterm.action.ActivateTabRelative(-1) },
-	{ key = "2", mods = "CMD", action = wezterm.action.ActivateTabRelative(1) },
 	{ key = "F2", mods = "", action = wezterm.action.ActivateCopyMode },
 }
 
