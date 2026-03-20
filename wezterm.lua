@@ -446,7 +446,7 @@ config.enable_scroll_bar = false -- 隐藏右侧滚动条
 -- ============================================================
 config.window_background_opacity = 0.97
 
-config.window_background_image = "/Users/john/Pictures/bg/girl.gif"
+config.window_background_image = "/Users/john/Pictures/bg/xcmj.jpg"
 
 -- 降低背景图片亮度，让文字更清晰
 config.window_background_image_hsb = {
