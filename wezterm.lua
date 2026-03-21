@@ -437,7 +437,7 @@ config.default_cursor_style = "BlinkingBlock"
 -- 滚动与历史记录
 -- ============================================================
 -- 查看历史记录时，不因新输出而自动滚动到底部
-config.scroll_to_bottom_on_input = false
+config.scroll_to_bottom_on_input = true
 config.scrollback_lines = 50000 -- 保留 50000 行历史
 config.enable_scroll_bar = false -- 隐藏右侧滚动条
 
