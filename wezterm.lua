@@ -455,4 +455,12 @@ config.window_background_image_hsb = {
 	hue = 1.0, -- 色调
 }
 
+-- ============================================================
+-- 链接处理：用 Firefox 打开
+-- ============================================================
+wezterm.on("open-uri", function(window, pane, uri)
+	wezterm.open_with(uri, "Firefox")
+	return false -- 必须保留，阻止 WezTerm 再调用系统默认浏览器
+end)
+
 return config
