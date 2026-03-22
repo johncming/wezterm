@@ -99,8 +99,8 @@ local FONT_PROFILES = {
 	-- 等宽体: 适合编程/Claude Code
 	{
 		name = "等宽体",
-		font = wezterm.font("DaddyTimeMono Nerd Font"),
-		font_size = 16.0,
+		font = wezterm.font("Fantasque Sans Mono"),
+		font_size = 19.0,
 	},
 }
 
