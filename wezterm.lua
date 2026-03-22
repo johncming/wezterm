@@ -155,6 +155,8 @@ config.keys = {
 	{ key = "t", mods = "CMD", action = wezterm.action.SpawnTab("DefaultDomain") },
 	{ key = "w", mods = "CMD", action = wezterm.action.CloseCurrentTab({ confirm = false }) },
 	{ key = "F2", mods = "", action = wezterm.action.ActivateCopyMode },
+	-- Claude Code 对话定位: F4 搜索 ❯ 定位 Claude Code prompt
+	{ key = "F4", action = wezterm.action.Search { Regex = "❯" } },
 }
 
 -- ============================================================
