@@ -47,15 +47,15 @@ end
 -- ① 使用非原生全屏模式（快速、无 Space 切换动画）
 config.native_macos_fullscreen_mode = false
 
--- ② 启动时自动全屏（使用窗口聚焦事件，确保只执行一次）
-local fullscreen_initialized = {}
-wezterm.on("window-focus-changed", function(window, pane)
-	local window_id = window:window_id()
-	if not fullscreen_initialized[window_id] then
-		fullscreen_initialized[window_id] = true
-		window:toggle_fullscreen()
-	end
-end)
+-- ② 启动时自动全屏（已禁用）
+-- local fullscreen_initialized = {}
+-- wezterm.on("window-focus-changed", function(window, pane)
+-- 	local window_id = window:window_id()
+-- 	if not fullscreen_initialized[window_id] then
+-- 		fullscreen_initialized[window_id] = true
+-- 		window:toggle_fullscreen()
+-- 	end
+-- end)
 
 -- ③ 设置窗口底部边框颜色
 wezterm.on("update-status", function(window, pane)
@@ -418,9 +418,9 @@ config.colors = {
 		},
 	},
 }
--- 注意: 全屏模式下不需要固定行列数，WezTerm 会自动适应屏幕
--- config.initial_cols = 120
--- config.initial_rows = 35
+-- 默认窗口大小
+config.initial_cols = 120
+config.initial_rows = 15
 config.line_height = 1.2 -- 行高
 config.cell_width = 1.07 -- 字符间距 (默认 1.0)
 
