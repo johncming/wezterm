@@ -434,6 +434,7 @@ config.window_padding = {
 
 -- 光标样式: 闪烁方块
 config.default_cursor_style = "BlinkingBlock"
+config.cursor_blink_rate = 800 -- 闪烁间隔(毫秒), 默认500
 
 -- ============================================================
 -- 滚动与历史记录
