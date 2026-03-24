@@ -419,8 +419,8 @@ config.colors = {
 	},
 }
 -- 默认窗口大小
-config.initial_cols = 120
-config.initial_rows = 15
+config.initial_cols = 121
+config.initial_rows = 16
 config.line_height = 1.2 -- 行高
 config.cell_width = 1.07 -- 字符间距 (默认 1.0)
 
